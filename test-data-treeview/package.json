@@ -1,0 +1,156 @@
+{
+    "name": "test-data-treeview",
+    "displayName": "Test Data Treeview",
+    "description": "Test data treeview for scilus projects",
+    "version": "1.0.0",
+    "publisher": "nf-neuro",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/scilus/vscode-neuro.git"
+    },
+    "engines": {
+        "vscode": "^1.92.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "views": {
+            "explorer": [
+                {
+                    "id": "testDataExplorer",
+                    "name": "Test Data Explorer"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "testDataExplorer.clearCache",
+                    "when": "view == testDataExplorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "testDataExplorer.loadListing",
+                    "when": "view == testDataExplorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "testDataExplorer.forceDownloadListing",
+                    "when": "view == testDataExplorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "testDataExplorer.refreshEntry",
+                    "when": "view == testDataExplorer",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "testDataExplorer.openInEditor",
+                    "when": "view == testDataExplorer && viewItem == testDataFile",
+                    "group": "inline"
+                },
+                {
+                    "command": "testDataExplorer.saveAs",
+                    "when": "view == testDataExplorer && viewItem == testDataFile",
+                    "group": "inline"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "testDataExplorer.refreshEntry",
+                "title": "Refresh packages",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "testDataExplorer.clearCache",
+                "title": "Clear cache",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "testDataExplorer.loadListing",
+                "title": "Load package listing",
+                "icon": "$(list-tree)"
+            },
+            {
+                "command": "testDataExplorer.forceDownloadListing",
+                "title": "Force online package listing",
+                "icon": "$(cloud-download)"
+            },
+            {
+                "command": "testDataExplorer.openInEditor",
+                "title": "Open file in the editor",
+                "icon": "$(eye)"
+            },
+            {
+                "command": "testDataExplorer.saveAs",
+                "title": "Save as...",
+                "icon": "$(desktop-download)"
+            }
+        ],
+        "configuration":[
+            {
+                "title": "Test Data Explorer",
+                "properties": {
+                    "testDataExplorer.repository": {
+                        "type": ["string", "null"],
+                        "default": null,
+                        "description": "URL of the repository to use to load the listing for the test data treeview"
+                    },
+                    "testDataExplorer.branch": {
+                        "type": "string",
+                        "default": "main",
+                        "description": "Branch to use to load the listing for the test data treeview"
+                    },
+                    "testDataExplorer.dataserver": {
+                        "type": ["string", "null"],
+                        "default": null,
+                        "description": "URL of the data server to use to download the test data"
+                    },
+                    "testDataExplorer.serverdatalocation": {
+                        "type": ["string", "null"],
+                        "default": null,
+                        "description": "Location of the test data on the data server"
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint src --ext ts",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/adm-zip": "^0.5.5",
+        "@types/mocha": "^10.0.7",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.92.0",
+        "@typescript-eslint/eslint-plugin": "^7.14.1",
+        "@typescript-eslint/parser": "^7.11.0",
+        "@vscode/test-cli": "^0.0.9",
+        "@vscode/test-electron": "^2.4.0",
+        "esbuild": "^0.21.5",
+        "eslint": "^8.57.0",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.15"
+    }
+}
