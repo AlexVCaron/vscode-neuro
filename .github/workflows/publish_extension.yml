@@ -21,30 +21,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            nf-scil-extensions/${{ inputs.name }}
+            ${{ inputs.name }}/
           sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "npm"
-          cache-dependency-path: nf-scil-extensions/${{ inputs.name }}/package-lock.json
+          cache-dependency-path: ${{ inputs.name }}/package-lock.json
 
       - name: npm clean install
-        working-directory: nf-scil-extensions/${{ inputs.name }}
+        working-directory: ${{ inputs.name }}/
         run: npm ci
 
       # - name: Publish to Open VSX Registry
       #   uses: HaaLeo/publish-vscode-extension@v1
       #   with:
-      #     packagePath: nf-scil-extensions/${{ inputs.name }}
+      #     packagePath: ${{ inputs.name }}/
       #     pat: ${{ secrets.OPEN_VSX_TOKEN }}
       #     skipDuplicate: true
 
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
-          packagePath: nf-scil-extensions/${{ inputs.name }}
+          packagePath: ${{ inputs.name }}/
           pat: ${{ secrets.VSCE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
           skipDuplicate: true
