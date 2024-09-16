@@ -1,0 +1,50 @@
+name: Publish Extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Name of the extension to deploy"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      name:
+        description: "Name of the extension to deploy"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nf-scil-extensions/${{ inputs.name }}
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: nf-scil-extensions/${{ inputs.name }}/package-lock.json
+
+      - name: npm clean install
+        working-directory: nf-scil-extensions/${{ inputs.name }}
+        run: npm ci
+
+      # - name: Publish to Open VSX Registry
+      #   uses: HaaLeo/publish-vscode-extension@v1
+      #   with:
+      #     packagePath: nf-scil-extensions/${{ inputs.name }}
+      #     pat: ${{ secrets.OPEN_VSX_TOKEN }}
+      #     skipDuplicate: true
+
+      - name: Publish to Visual Studio Marketplace
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          packagePath: nf-scil-extensions/${{ inputs.name }}
+          pat: ${{ secrets.VSCE_TOKEN }}
+          registryUrl: https://marketplace.visualstudio.com
+          skipDuplicate: true

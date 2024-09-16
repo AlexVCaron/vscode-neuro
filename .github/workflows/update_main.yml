@@ -1,0 +1,18 @@
+name: Merge actions
+on:
+  push:
+    branches:
+      - main
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-main
+  cancel-in-progress: true
+
+jobs:
+  publish-test-data-treeview-extension:
+    if: github.repository == 'AlexVCaron/vscode-neuro'
+    uses: ./.github/workflows/publish_extension.yml
+    with:
+      name: "test-data-treeview"
+    secrets: inherit
