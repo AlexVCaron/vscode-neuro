@@ -2,7 +2,7 @@
     "name": "test-data-treeview",
     "displayName": "Test Data Treeview",
     "description": "Test data treeview for scilus projects",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "nf-neuro",
     "license": "MIT",
     "repository": {
