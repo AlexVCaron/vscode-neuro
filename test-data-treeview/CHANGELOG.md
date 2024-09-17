@@ -4,6 +4,14 @@ All notable changes to the "test-data-treeview" extension will be documented in 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.4] - 2024-09-16
+
+- Bind local listing back to workspace
+
+## [1.0.3] - 2024-09-16
+
+- Make local listing loading work
+
 ## [1.0.2] - 2024-09-16
 
 - Further fix configuration

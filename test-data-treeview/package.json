@@ -2,7 +2,7 @@
     "name": "test-data-treeview",
     "displayName": "Test Data Treeview",
     "description": "Test data treeview for scilus projects",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "publisher": "nf-neuro",
     "license": "MIT",
     "repository": {
@@ -99,33 +99,40 @@
             "properties": {
                 "testDataExplorer.localListingLocation": {
                     "type": ["string", "null"],
-                    "default": "${workspaceFolder}/listing.json",
-                    "description": "Local path to a listing json file."
+                    "default": "listing.json",
+                    "description": "Local path relative to workspace root to a listing json file.",
+                    "format": "uri",
+                    "scope": "window"
                 },
                 "testDataExplorer.repository": {
                     "type": ["string", "null"],
                     "default": null,
-                    "description": "URL of the repository to use to load the listing for the test data treeview"
+                    "description": "URL of the repository to use to load the listing for the test data treeview",
+                    "scope": "window"
                 },
                 "testDataExplorer.branch": {
                     "type": "string",
                     "default": "main",
-                    "description": "Branch to use to load the listing for the test data treeview"
+                    "description": "Branch to use to load the listing for the test data treeview",
+                    "scope": "window"
                 },
                 "testDataExplorer.remoteListingLocation": {
                     "type": ["string", "null"],
                     "default": "listing.json",
-                    "description": "Remote path on the repository to a listing json file."
+                    "description": "Remote path on the repository to a listing json file.",
+                    "scope": "window"
                 },
                 "testDataExplorer.dataserver": {
                     "type": ["string", "null"],
                     "default": null,
-                    "description": "URL of the data server to use to download the test data"
+                    "description": "URL of the data server to use to download the test data",
+                    "scope": "window"
                 },
                 "testDataExplorer.serverdatalocation": {
                     "type": ["string", "null"],
                     "default": null,
-                    "description": "Location of the test data on the data server"
+                    "description": "Location of the test data on the data server",
+                    "scope": "window"
                 }
             }
         }

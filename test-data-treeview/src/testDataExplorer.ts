@@ -30,8 +30,13 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
         this.temp = storagePath;
         this.packagePath = fpath.join(this.temp, "packages");
         this.contentPath = fpath.join(this.temp, "unpacked");
-        this.listing = vscode.workspace.getConfiguration('testDataExplorer')
-            ['localListingLocation'];
+        if (this.workspaceRoot) {
+            this.listing = fpath.join(
+                this.workspaceRoot,
+                vscode.workspace.getConfiguration('testDataExplorer')
+                    ['localListingLocation']
+            );
+        }
 
         fs.mkdirSync(storagePath, { recursive: true });
         fs.mkdirSync(this.packagePath, { recursive: true });
@@ -41,8 +46,13 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
     refresh(all: boolean = true): void {
         if (all) {
             this.pullOnline = true;
-            this.listing = vscode.workspace.getConfiguration('testDataExplorer')
-                ['localListingLocation'];
+            if (this.workspaceRoot) {
+                this.listing = fpath.join(
+                    this.workspaceRoot,
+                    vscode.workspace.getConfiguration('testDataExplorer')
+                        ['localListingLocation']
+                );
+            }
         }
 
         this._onDidChangeTreeData.fire();
