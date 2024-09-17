@@ -11,7 +11,7 @@
     // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
     "typescript.tsc.autoDetect": "off",
 
-    "testDataExplorer.localListingLocation": "${workspaceFolder}/test_listing.json",
+    "testDataExplorer.localListingLocation": "test_listing.json",
     "testDataExplorer.repository": "scilus/nf-neuro",
     "testDataExplorer.branch": "main",
     "testDataExplorer.dataserver": "scil.usherbrooke.ca",

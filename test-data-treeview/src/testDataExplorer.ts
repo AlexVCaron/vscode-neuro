@@ -164,21 +164,24 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
                     resolve(listing);
                 });
             });
-
-            return listingPromise.then((listing) => {
-                const testPackages: TestDataPackage[] = [];
-                const data = JSON.parse(fs.readFileSync(listing, "utf8"));
-
-                for (const key in data) {
-                    const value = data[key];
-                    testPackages.push(new TestDataPackage(
-                        key, vscode.TreeItemCollapsibleState.Collapsed, "", value
-                    ));
-                }
-
-                return testPackages;
-            });
         }
+        else {
+            return Promise.resolve([]);
+        }
+
+        return listingPromise.then((listing) => {
+            const testPackages: TestDataPackage[] = [];
+            const data = JSON.parse(fs.readFileSync(listing, "utf8"));
+
+            for (const key in data) {
+                const value = data[key];
+                testPackages.push(new TestDataPackage(
+                    key, vscode.TreeItemCollapsibleState.Collapsed, "", value
+                ));
+            }
+
+            return testPackages;
+        });
     }
 
     getTestDataPackages(): Thenable<TestDataPackage[]> {
