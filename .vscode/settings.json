@@ -1,0 +1,8 @@
+{
+    "testDataExplorer.localListingLocation": "${workspaceFolder}/test-data-treeview/test_listing.json",
+    "testDataExplorer.repository": "scilus/nf-neuro",
+    "testDataExplorer.branch": "main",
+    "testDataExplorer.dataserver": "scil.usherbrooke.ca",
+    "testDataExplorer.serverdatalocation": "scil_test_data/dvc-store/files/md5",
+    "testDataExplorer.remoteListingLocation": "tests/test_data.json"
+}

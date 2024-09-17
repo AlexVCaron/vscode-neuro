@@ -10,7 +10,9 @@
             "type": "extensionHost",
             "request": "launch",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}/test-data-treeview"
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}/test-data-treeview",
+                "--add ${workspaceFolder}"
             ],
             "outFiles": [
                 "${workspaceFolder}/test-data-treeview/dist/**/*.js"

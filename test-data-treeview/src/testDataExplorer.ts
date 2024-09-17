@@ -30,10 +30,8 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
         this.temp = storagePath;
         this.packagePath = fpath.join(this.temp, "packages");
         this.contentPath = fpath.join(this.temp, "unpacked");
-
-        if (workspaceRoot) {
-            this.listing = fpath.join(workspaceRoot, "tests", "config", "test_data.json");
-        }
+        this.listing = vscode.workspace.getConfiguration('testDataExplorer')
+            ['localListingLocation'];
 
         fs.mkdirSync(storagePath, { recursive: true });
         fs.mkdirSync(this.packagePath, { recursive: true });
@@ -43,10 +41,8 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
     refresh(all: boolean = true): void {
         if (all) {
             this.pullOnline = true;
-
-            if (this.workspaceRoot) {
-                this.listing = fpath.join(this.workspaceRoot, "tests", "config", "test_data.json");
-            }
+            this.listing = vscode.workspace.getConfiguration('testDataExplorer')
+                ['localListingLocation'];
         }
 
         this._onDidChangeTreeData.fire();
@@ -90,10 +86,6 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
     }
 
     getChildren(element?: TestDataItem): Thenable<TestDataItem[]> {
-        if (!this.workspaceRoot) {
-            return Promise.resolve([]);
-        }
-
         if (element) {
             return Promise.resolve(this.getChildrenItems(element));
         } else {
@@ -145,36 +137,33 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
     }
 
     loadTestDataListing(listing?: string): Thenable<TestDataPackage[]> | void {
-        if (this.workspaceRoot) {
-            let listingPromise: Promise<string>;
+        let listingPromise: Promise<string>;
 
-            if (listing && fs.existsSync(listing)) {
-                listingPromise = Promise.resolve(listing);
-            } else if (this.pullOnline) {
-                const repo = vscode.workspace.getConfiguration('myExtension')['repository'];
-                const branch = vscode.workspace.getConfiguration('myExtension')['branch'];
+        if (listing && fs.existsSync(listing)) {
+            listingPromise = Promise.resolve(listing);
+        } else if (this.pullOnline) {
+            const repo = vscode.workspace.getConfiguration('testDataExplorer')['repository'];
+            const branch = vscode.workspace.getConfiguration('testDataExplorer')['branch'];
+            const location = vscode.workspace.getConfiguration('testDataExplorer')['remoteListingLocation'];
 
-                console.log("Fetching listing from" + repo + "/" + branch);
+            console.log("Fetching listing from" + repo + "/" + branch);
 
-                const listing = fpath.join(this.temp, "test_data.json");
-                const repoURL = url.format({
-                    protocol: "https",
-                    hostname: "raw.githubusercontent.com",
-                    pathname: repo,
+            const listing = fpath.join(this.temp, "test_data.json");
+            const repoURL = url.format({
+                protocol: "https",
+                hostname: "raw.githubusercontent.com",
+                pathname: repo,
+            });
+
+            fs.rmSync(listing, { force: true });
+            listingPromise = new Promise((resolve) => {
+                this.downloadFile(
+                    fpath.join(repoURL, branch, location),
+                    listing,
+                ).then(() => {
+                    resolve(listing);
                 });
-
-                fs.rmSync(listing, { force: true });
-                listingPromise = new Promise((resolve) => {
-                    this.downloadFile(
-                        fpath.join(repoURL, branch, "tests", "config", "test_data.json"),
-                        listing,
-                    ).then(() => {
-                        resolve(listing);
-                    });
-                });
-            } else {
-                return Promise.resolve([]);
-            }
+            });
 
             return listingPromise.then((listing) => {
                 const testPackages: TestDataPackage[] = [];
@@ -194,6 +183,12 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
 
     getTestDataPackages(): Thenable<TestDataPackage[]> {
         return Promise.resolve(this.loadTestDataListing(this.listing) || []);
+    }
+
+    getworkspaceURI(): vscode.Uri | undefined {
+        if (this.workspaceRoot) {
+            return vscode.Uri.file(this.workspaceRoot);
+        }
     }
 
     unpackArchive(archive: string): Thenable<string> {
@@ -243,8 +238,8 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
         const packagePath = fpath.join(this.packagePath, element.label);
         const dataURL = url.format({
             protocol: "https",
-            hostname: vscode.workspace.getConfiguration('myExtension')['dataserver'],
-            pathname: vscode.workspace.getConfiguration('myExtension')['serverdatalocation'],
+            hostname: vscode.workspace.getConfiguration('testDataExplorer')['dataserver'],
+            pathname: vscode.workspace.getConfiguration('testDataExplorer')['serverdatalocation'],
         });
 
         return new Promise((resolve) => {
@@ -272,26 +267,24 @@ export class TestDataProvider implements vscode.TreeDataProvider<TestDataItem> {
         Promise.resolve(
             vscode.commands.executeCommand(
                 "vscode.open", vscode.Uri.file(fpath.join(this.contentPath, element.path)
-            )),
+                )),
         );
     }
 
     saveAs(element: TestDataItem): void {
-        if (this.workspaceRoot) {
-            vscode.window
-                .showSaveDialog({
-                    defaultUri: vscode.Uri.file(this.workspaceRoot),
-                    filters: {
-                        "All files": ["*"],
-                    },
-                })
-                .then((uri) => {
-                    if (uri) {
-                        fs.copyFileSync(fpath.join(this.contentPath, element.path), uri.fsPath);
-                    }
-                });
+        vscode.window
+            .showSaveDialog({
+                defaultUri: this.getworkspaceURI(),
+                filters: {
+                    "All files": ["*"],
+                },
+            })
+            .then((uri) => {
+                if (uri) {
+                    fs.copyFileSync(fpath.join(this.contentPath, element.path), uri.fsPath);
+                }
+            });
         }
-    }
 }
 
 export abstract class TestDataItem extends vscode.TreeItem {

@@ -2,7 +2,7 @@
     "name": "test-data-treeview",
     "displayName": "Test Data Treeview",
     "description": "Test data treeview for scilus projects",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "publisher": "nf-neuro",
     "license": "MIT",
     "repository": {
@@ -94,33 +94,41 @@
                 "icon": "$(desktop-download)"
             }
         ],
-        "configuration":[
-            {
-                "title": "Test Data Explorer",
-                "properties": {
-                    "testDataExplorer.repository": {
-                        "type": ["string", "null"],
-                        "default": null,
-                        "description": "URL of the repository to use to load the listing for the test data treeview"
-                    },
-                    "testDataExplorer.branch": {
-                        "type": "string",
-                        "default": "main",
-                        "description": "Branch to use to load the listing for the test data treeview"
-                    },
-                    "testDataExplorer.dataserver": {
-                        "type": ["string", "null"],
-                        "default": null,
-                        "description": "URL of the data server to use to download the test data"
-                    },
-                    "testDataExplorer.serverdatalocation": {
-                        "type": ["string", "null"],
-                        "default": null,
-                        "description": "Location of the test data on the data server"
-                    }
+        "configuration": {
+            "title": "Test Data Explorer",
+            "properties": {
+                "testDataExplorer.localListingLocation": {
+                    "type": ["string", "null"],
+                    "default": "${workspaceFolder}/listing.json",
+                    "description": "Local path to a listing json file."
+                },
+                "testDataExplorer.repository": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "URL of the repository to use to load the listing for the test data treeview"
+                },
+                "testDataExplorer.branch": {
+                    "type": "string",
+                    "default": "main",
+                    "description": "Branch to use to load the listing for the test data treeview"
+                },
+                "testDataExplorer.remoteListingLocation": {
+                    "type": ["string", "null"],
+                    "default": "listing.json",
+                    "description": "Remote path on the repository to a listing json file."
+                },
+                "testDataExplorer.dataserver": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "URL of the data server to use to download the test data"
+                },
+                "testDataExplorer.serverdatalocation": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "Location of the test data on the data server"
                 }
             }
-        ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run package",
